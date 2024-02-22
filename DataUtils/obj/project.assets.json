@@ -1,30 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
-      "DataUtils/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "compile": {
-          "bin/placeholder/DataUtils.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/DataUtils.dll": {}
-        }
-      }
-    }
+    "net6.0": {}
   },
-  "libraries": {
-    "DataUtils/1.0.0": {
-      "type": "project",
-      "path": "../DataUtils/DataUtils.csproj",
-      "msbuildProject": "../DataUtils/DataUtils.csproj"
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    "net6.0": [
-      "DataUtils >= 1.0.0"
-    ]
+    "net6.0": []
   },
   "packageFolders": {
     "C:\\Users\\79787\\.nuget\\packages\\": {}
@@ -32,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\79787\\source\\repos\\ControlHomework3_2\\UserUtils\\UserUtils.csproj",
-      "projectName": "UserUtils",
-      "projectPath": "C:\\Users\\79787\\source\\repos\\ControlHomework3_2\\UserUtils\\UserUtils.csproj",
+      "projectUniqueName": "C:\\Users\\79787\\source\\repos\\ControlHomework3_2\\DataUtils\\DataUtils.csproj",
+      "projectName": "DataUtils",
+      "projectPath": "C:\\Users\\79787\\source\\repos\\ControlHomework3_2\\DataUtils\\DataUtils.csproj",
       "packagesPath": "C:\\Users\\79787\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\79787\\source\\repos\\ControlHomework3_2\\UserUtils\\obj\\",
+      "outputPath": "C:\\Users\\79787\\source\\repos\\ControlHomework3_2\\DataUtils\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\79787\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -52,11 +33,7 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {
-            "C:\\Users\\79787\\source\\repos\\ControlHomework3_2\\DataUtils\\DataUtils.csproj": {
-              "projectPath": "C:\\Users\\79787\\source\\repos\\ControlHomework3_2\\DataUtils\\DataUtils.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {

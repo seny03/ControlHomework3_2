@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "UserUtils/1.0.0": {
+        "dependencies": {
+          "DataUtils": "1.0.0"
+        },
+        "runtime": {
+          "UserUtils.dll": {}
+        }
+      },
+      "DataUtils/1.0.0": {
+        "runtime": {
+          "DataUtils.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "UserUtils/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DataUtils/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
