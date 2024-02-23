@@ -6,18 +6,34 @@ namespace DataUtils
     public class Doctor
     {
         [JsonPropertyName("doctor_id")]
-        public int DoctorId { get; set; }
+        public int DoctorId { get; private set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         [JsonPropertyName("appointment_count")]
-        public int AppointmentCount { get; set; }
+        public int AppointmentCount { get; private set; }
         public Doctor(int doctorId, string name, int appointmentCount)
         {
             DoctorId = doctorId;
             Name = name;
             AppointmentCount = appointmentCount;
+        }
+
+        public Doctor(JsonElement json)
+        {
+            if (json.TryGetProperty("doctor_id", out var doctorIdElement) && doctorIdElement.TryGetInt32(out var doctorId) &&
+                json.TryGetProperty("name", out var nameElement) && nameElement.GetString() is not null &&
+                json.TryGetProperty("appointment_count", out var appointmentCountElement) && appointmentCountElement.TryGetInt32(out var appointmentCount))
+            {
+                DoctorId = doctorId;
+                Name = nameElement.GetString();
+                AppointmentCount = appointmentCount;
+            }
+            else
+            {
+                throw new ArgumentException("Объект Doctor задан некорректно.");
+            }
         }
 
         public Doctor()

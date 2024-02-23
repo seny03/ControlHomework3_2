@@ -11,19 +11,19 @@ namespace DataUtils
         private List<Doctor> _doctors = new List<Doctor>();
 
         [JsonPropertyName("patient_id")]
-        public int PatientId { get; set; }
+        public int PatientId { get; private set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         [JsonPropertyName("age")]
-        public int Age { get; set; }
+        public int Age { get; private set; }
 
         [JsonPropertyName("gender")]
-        public string Gender { get; set; }
+        public string Gender { get; private set; }
 
         [JsonPropertyName("diagnosis")]
-        public string Diagnosis { get; set; }
+        public string Diagnosis { get; private set; }
 
         [JsonPropertyName("heart_rate")]
         public int HeartRate
@@ -37,7 +37,7 @@ namespace DataUtils
                 bool previousState = IsNormalState;
                 Console.WriteLine(previousState + " " + HeartRate);
                 _heartRate = value;
-                OnFieldChange?.Invoke(this, new StateEventArgs(previousState, IsNormalState));
+                ImportantFieldUpdated?.Invoke(this, new StateEventArgs(previousState, IsNormalState));
             }
         }
 
@@ -52,7 +52,7 @@ namespace DataUtils
             {
                 bool previousState = IsNormalState;
                 _temperature = value;
-                OnFieldChange?.Invoke(this, new StateEventArgs(previousState, IsNormalState));
+                ImportantFieldUpdated?.Invoke(this, new StateEventArgs(previousState, IsNormalState));
             }
         }
 
@@ -67,7 +67,7 @@ namespace DataUtils
             {
                 bool previousState = IsNormalState;
                 _oxygenSaturation = value;
-                OnFieldChange?.Invoke(this, new StateEventArgs(previousState, IsNormalState));
+                ImportantFieldUpdated?.Invoke(this, new StateEventArgs(previousState, IsNormalState));
             }
         }
 
@@ -82,7 +82,7 @@ namespace DataUtils
                 {
                     foreach (var doctor in _doctors)
                     {
-                        OnFieldChange += doctor.ChangeAppointmentCount;
+                        ImportantFieldUpdated += doctor.ChangeAppointmentCount;
                     }
                 }
             }
@@ -91,7 +91,8 @@ namespace DataUtils
         public bool IsNormalState => (36 <= Temperature && Temperature <= 38) && (60 <= HeartRate && HeartRate <= 100) &&
             (95 <= OxygenSaturation && OxygenSaturation <= 100);
 
-        event EventHandler<StateEventArgs>? OnFieldChange;
+        private event EventHandler<StateEventArgs>? ImportantFieldUpdated;
+        public event EventHandler<UpdatedEventArgs>? Updated;
 
         public Patient(int patientId, string name, int age, string gender, string diagnosis, int heartRate, double temperature, int oxygenSaturation, List<Doctor> doctors)
         {
@@ -106,10 +107,81 @@ namespace DataUtils
             Doctors = doctors;
         }
 
+        public Patient(JsonElement json)
+        {
+            if (json.TryGetProperty("patient_id", out var patientIdElement) && patientIdElement.TryGetInt32(out var patientId) &&
+                json.TryGetProperty("name", out var nameElement) && nameElement.GetString() is not null &&
+                json.TryGetProperty("age", out var ageElement) && ageElement.TryGetInt32(out var age) &&
+                json.TryGetProperty("gender", out var genderElement) && genderElement.GetString() is not null &&
+                json.TryGetProperty("diagnosis", out var diagnosisElement) && diagnosisElement.GetString() is not null &&
+                json.TryGetProperty("heart_rate", out var heartRateElement) && heartRateElement.TryGetInt32(out var heartRate) &&
+                json.TryGetProperty("temperature", out var temperatureElement) && temperatureElement.TryGetDouble(out var temperature) &&
+                json.TryGetProperty("oxygen_saturation", out var oxygenSaturationElement) && oxygenSaturationElement.TryGetInt32(out var oxygenSaturation) &&
+                json.TryGetProperty("doctors", out var doctorsElement))
+            {
+                PatientId = patientId;
+                Name = nameElement.GetString();
+                Age = age;
+                Gender = genderElement.GetString();
+                Diagnosis = diagnosisElement.GetString();
+                HeartRate = heartRate;
+                Temperature = temperature;
+                OxygenSaturation = oxygenSaturation;
+
+                var doctors = new List<Doctor>();
+                foreach (var doctorJson in doctorsElement.EnumerateArray())
+                {
+                    doctors.Add(new Doctor(doctorJson));
+                }
+                Doctors = doctors;
+            }
+            else
+            {
+                throw new ArgumentException("Объект Patient задан некорретно.");
+            }
+        }
+
         public Patient()
         {
             Doctors = new List<Doctor>();
             Name = Gender = Diagnosis = string.Empty;
+        }
+
+        public void ChangeField(string fieldName, object value, List<Patient> allData)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException("field");
+            }
+
+            switch (fieldName)
+            {
+                case "name":
+                    Name = (string)value;
+                    break;
+                case "age":
+                    Age = (int)value;
+                    break;
+                case "gender":
+                    Gender = (string)value;
+                    break;
+                case "diagnosis":
+                    Diagnosis = (string)value;
+                    break;
+                case "heart_rate":
+                    HeartRate = (int)value;
+                    break;
+                case "temperature":
+                    Temperature = (double)value;
+                    break;
+                case "oxygen_saturation":
+                    OxygenSaturation = (int)value;
+                    break;
+                default:
+                    throw new ArgumentException($"Некорректное назвние поля: {fieldName}");
+            }
+
+            Updated?.Invoke(this, new UpdatedEventArgs(DateTime.Now, allData));
         }
 
         /// <summary>
