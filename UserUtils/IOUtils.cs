@@ -15,24 +15,21 @@ namespace UserUtils
         /// <summary>
         /// Ведет диалог с пользователем и считывает json данные.
         /// </summary>
-        internal static Patient[] ReadData()
+        internal static List<Patient>? ReadData()
         {
-            Console.Write("Введите путь для считывания данных:");
+            Console.Write("Введите путь для считывания данных: ");
             string? path = Console.ReadLine();
             try
             {
-                using StreamReader input = new StreamReader(path);
-                {
-                    Console.SetIn(input);
-                    return JsonParser.ReadJson();
-                }
+                List<Patient>? patients = JsonParser.ReadJson(path);
+                AutoSaver autoSaver = new AutoSaver(path, patients);
+                return patients;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"При попытке считать данные из файла возникла ошибка: {ex.Message}");
-                Console.WriteLine("Считывание данных будет осуществлятся через консоль; чтобы прекратить ввод данных, наберите Ctrl + Z и нажмите Enter:");
             }
-            return JsonParser.ReadJson();
+            return null;
         }
     }
 }

@@ -9,14 +9,19 @@ namespace DataUtils
         private DateTime _lastUpdateTime;
         private string _path;
 
-        public AutoSaver(string path, List<Patient> allData)
+        public AutoSaver(string? path, List<Patient> allData, bool logging = true)
         {
             foreach (Patient patient in allData)
             {
                 patient.Updated += Updated;
             }
-            _path = Path.GetDirectoryName(path) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(path) + "_tmp.json";
+            _path = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path)) + "_tmp.json";
             _lastUpdateTime = DateTime.Now;
+
+            if (logging)
+            {
+                Console.WriteLine($"[!] Включено автосохранение в файл: \"{_path}\"");
+            }
         }
 
         private void Save(List<Patient> allPatients)
@@ -31,10 +36,10 @@ namespace DataUtils
 
         private void Updated(object? sender, UpdatedEventArgs updated)
         {
-            if ((updated.ChangeDateTime - lastUpdateTime).TotalSeconds <= 15)
+            if ((updated.ChangeDateTime - _lastUpdateTime).TotalSeconds <= 15)
             {
-                lastUpdateTime = updated.ChangeDateTime;
-                SaveTmp(updated.patients);
+                _lastUpdateTime = updated.ChangeDateTime;
+                Save(updated.AllData);
             }
         }
     }

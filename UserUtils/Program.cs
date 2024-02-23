@@ -7,7 +7,14 @@ namespace UserUtils
         static void Main(string[] args)
         {
             IOUtils.HelloMessage();
-            Patient p = new(1, "", 10, "m", "", 10, 10, 10, null);
+            while (true)
+            {
+                List<Patient>? patients = IOUtils.ReadData();
+                if (patients is null)
+                {
+                    continue;
+                }
+            }
         }
     }
 }

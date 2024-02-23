@@ -51,11 +51,11 @@ namespace DataUtils
             // Если состояние пациента изменилось, то изменяем AppointmentCount в зависимости от того улучшилось оно или ухудшилось.
             if (state.CurrentState)
             {
-                AppointmentCount++;
+                AppointmentCount--;
             }
             else
             {
-                AppointmentCount--;
+                AppointmentCount++;
             }
         }
 

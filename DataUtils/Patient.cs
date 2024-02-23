@@ -35,7 +35,6 @@ namespace DataUtils
             set
             {
                 bool previousState = IsNormalState;
-                Console.WriteLine(previousState + " " + HeartRate);
                 _heartRate = value;
                 ImportantFieldUpdated?.Invoke(this, new StateEventArgs(previousState, IsNormalState));
             }

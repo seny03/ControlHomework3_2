@@ -11,7 +11,7 @@ namespace DataUtils
         /// </summary>
         /// <param name="patients">Список с клиентами.</param>
         /// <param name="path">Путь до файлика сохранения.</param>
-        public static void WriteJson(List<Patient> patients, string path)
+        public static void WriteJson(string path, List<Patient> patients)
         {
             var options = new JsonSerializerOptions
             {
@@ -26,8 +26,13 @@ namespace DataUtils
         /// </summary>
         /// <param name="path">Путь до считывания.</param>
         /// <returns>Список с пациентами.</returns>
-        public static List<Patient> ReadJson(string path)
+        public static List<Patient> ReadJson(string? path)
         {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
             List<Patient> patients = new List<Patient>();
 
             JsonElement jsonElement = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(path));

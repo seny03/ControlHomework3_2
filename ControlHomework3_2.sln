@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserUtils", "UserUtils\UserUtils.csproj", "{A82BC724-C8A6-4177-BD0B-DC2180387C5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserUtils", "UserUtils\UserUtils.csproj", "{A82BC724-C8A6-4177-BD0B-DC2180387C5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataUtils", "DataUtils\DataUtils.csproj", "{A42447B4-A5F1-4328-BFD6-7FD3406D3090}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataUtils", "DataUtils\DataUtils.csproj", "{A42447B4-A5F1-4328-BFD6-7FD3406D3090}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
