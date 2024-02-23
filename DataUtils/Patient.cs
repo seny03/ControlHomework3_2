@@ -5,8 +5,9 @@ namespace DataUtils
 {
     public class Patient
     {
-        private int _heartRate, _oxygenSaturation;
-        private double _temperature;
+        private int _heartRate = 60;
+        private int _oxygenSaturation = 95;
+        private double _temperature = 36.0;
         private List<Doctor> _doctors = new List<Doctor>();
 
         [JsonPropertyName("patient_id")]
@@ -34,6 +35,7 @@ namespace DataUtils
             set
             {
                 bool previousState = IsNormalState;
+                Console.WriteLine(previousState + " " + HeartRate);
                 _heartRate = value;
                 OnFieldChange?.Invoke(this, new StateEventArgs(previousState, IsNormalState));
             }
