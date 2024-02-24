@@ -4,6 +4,9 @@ using System.Text.Unicode;
 
 namespace DataUtils
 {
+    /// <summary>
+    /// Предоставляет методы для чтения и записи данных в формате JSON.
+    /// </summary>
     public static class JsonParser
     {
         /// <summary>

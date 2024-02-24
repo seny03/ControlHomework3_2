@@ -2,8 +2,12 @@
 
 namespace UserUtils
 {
+    /// <summary>
+    /// Предоставляет методы для работы с пользователем через консоль.
+    /// </summary>
     internal static class IOUtils
     {
+        // Максимальное количесто символов в ширину при выводе в консоль.
         private static int s_maxSymbolsInWidth = 155;
 
         /// <summary>
@@ -32,7 +36,7 @@ namespace UserUtils
             try
             {
                 List<Patient>? patients = JsonParser.ReadJson(path);
-                AutoSaver autoSaver = new AutoSaver(path, patients);
+                AutoSaver autoSaver = new AutoSaver(path);
                 return patients;
             }
             catch (Exception ex)
@@ -41,6 +45,9 @@ namespace UserUtils
             }
             return null;
         }
+        /// <summary>
+        /// Полностью очищает консоль.
+        /// </summary>
         internal static void ConsoleClear()
         {
             Console.Clear();

@@ -2,6 +2,9 @@
 {
     public static class DataProcessing
     {
+        /// <summary>
+        /// Предоставляет методы для обработки данных.
+        /// </summary>
         public static List<Patient> Sort(List<Patient>? data, string columnName)
         {
             if (data is null)
@@ -22,7 +25,12 @@
             };
             return sortedData;
         }
-
+        /// <summary>
+        /// Сортирует список пациентов по указанной колонке.
+        /// </summary>
+        /// <param name="data">Список пациентов для сортировки.</param>
+        /// <param name="columnName">Название колонки для сортировки.</param>
+        /// <returns>Отсортированный список пациентов.</returns>
         public static List<Patient> Filter(List<Patient>? data, string columnName, object? value)
         {
             if (data is null)

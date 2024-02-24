@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace DataUtils
 {
+    /// <summary>
+    /// Представляет информацию о враче.
+    /// </summary>
     public class Doctor
     {
         [JsonPropertyName("doctor_id")]
@@ -13,13 +16,24 @@ namespace DataUtils
 
         [JsonPropertyName("appointment_count")]
         public int AppointmentCount { get; private set; }
+        public List<Patient> patients { get; private set; } = new List<Patient>() { };
+
+        /// <summary>
+        /// Инициализирует новый экземпляр класса Doctor с заданными значениями.
+        /// </summary>
+        /// <param name="doctorId">Идентификатор врача.</param>
+        /// <param name="name">Имя врача.</param>
+        /// <param name="appointmentCount">Количество оповещений о серьезно больных пациентах.</param>
         public Doctor(int doctorId, string name, int appointmentCount)
         {
             DoctorId = doctorId;
             Name = name;
             AppointmentCount = appointmentCount;
         }
-
+        /// <summary>
+        /// Инициализирует новый экземпляр класса Doctor из JSON.
+        /// </summary>
+        /// <param name="json">JSON-элемент, содержащий данные о враче.</param>
         public Doctor(JsonElement json)
         {
             if (json.TryGetProperty("doctor_id", out var doctorIdElement) && doctorIdElement.TryGetInt32(out var doctorId) &&
@@ -40,7 +54,11 @@ namespace DataUtils
         {
             Name = string.Empty;
         }
-
+        /// <summary>
+        /// Изменяет количество назначений врача в зависимости от состояния пациента.
+        /// </summary>
+        /// <param name="sender">Объект, вызвавший событие.</param>
+        /// <param name="state">Аргументы события: состояние пациента до и после изменяния важного параметра.</param>
         public void ChangeAppointmentCount(object? sender, StateEventArgs state)
         {
             // Если состояние пациента не изменилось, ничего не меняем.

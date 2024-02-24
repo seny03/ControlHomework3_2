@@ -3,7 +3,7 @@
 namespace UserUtils
 {
     /// <summary>
-    /// Предоставляет страницу меню для сортировки данных.
+    /// Предоставляет страницу меню для фильтрации данных.
     /// </summary>
     internal class FilterPage : MenuPage
     {
@@ -26,16 +26,7 @@ namespace UserUtils
             }
             Actions = actions.ToArray();
         }
-        internal FilterPage()
-        {
-            Descriptions = Patient.Properties;
-            List<Action> actions = new();
-            foreach (var property in Patient.Properties)
-            {
-                actions.Add(() => Filter(property));
-            }
-            Actions = actions.ToArray();
-        }
+        internal FilterPage() : this(FullMenu.CurrentPage.Heading, FullMenu.CurrentPage.Patients) { }
 
         private void Filter(string property)
         {

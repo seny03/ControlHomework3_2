@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace DataUtils
 {
+    /// <summary>
+    /// Представляет информацию о пациенте.
+    /// </summary>
     public class Patient
     {
         private int _heartRate = 60;
@@ -86,17 +89,21 @@ namespace DataUtils
                 }
             }
         }
-
+        [JsonIgnore]
         public bool IsNormalState => (36 <= Temperature && Temperature <= 38) && (60 <= HeartRate && HeartRate <= 100) &&
             (95 <= OxygenSaturation && OxygenSaturation <= 100);
         public static string[] Properties => new string[] { "patient_id", "name", "age", "gender", "diagnosis", "heart_rate", "temperature", "oxygen_saturation" };
         public static string[] ChangeableProperties => new string[] { "name", "age", "gender", "diagnosis", "heart_rate", "temperature", "oxygen_saturation" };
 
         private event EventHandler<StateEventArgs>? ImportantFieldUpdated;
-        public event EventHandler<UpdatedEventArgs>? Updated;
+        public static event EventHandler<UpdatedEventArgs>? Updated;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса Patient с заданными значениями.
+        /// </summary>
         public Patient(int patientId, string name, int age, string gender, string diagnosis, int heartRate, double temperature, int oxygenSaturation, List<Doctor> doctors)
         {
+            Doctors = doctors;
             PatientId = patientId;
             Name = name;
             Age = age;
@@ -105,9 +112,10 @@ namespace DataUtils
             HeartRate = heartRate;
             Temperature = temperature;
             OxygenSaturation = oxygenSaturation;
-            Doctors = doctors;
         }
-
+        /// <summary>
+        /// Инициализирует новый экземпляр класса Patient из JSON.
+        /// </summary>
         public Patient(JsonElement json)
         {
             if (json.TryGetProperty("patient_id", out var patientIdElement) && patientIdElement.TryGetInt32(out var patientId) &&
@@ -120,6 +128,13 @@ namespace DataUtils
                 json.TryGetProperty("oxygen_saturation", out var oxygenSaturationElement) && oxygenSaturationElement.TryGetInt32(out var oxygenSaturation) &&
                 json.TryGetProperty("doctors", out var doctorsElement))
             {
+                var doctors = new List<Doctor>();
+                foreach (var doctorJson in doctorsElement.EnumerateArray())
+                {
+                    doctors.Add(new Doctor(doctorJson));
+                }
+                Doctors = doctors;
+
                 PatientId = patientId;
                 Name = nameElement.GetString();
                 Age = age;
@@ -128,13 +143,6 @@ namespace DataUtils
                 HeartRate = heartRate;
                 Temperature = temperature;
                 OxygenSaturation = oxygenSaturation;
-
-                var doctors = new List<Doctor>();
-                foreach (var doctorJson in doctorsElement.EnumerateArray())
-                {
-                    doctors.Add(new Doctor(doctorJson));
-                }
-                Doctors = doctors;
             }
             else
             {
@@ -147,7 +155,9 @@ namespace DataUtils
             Doctors = new List<Doctor>();
             Name = Gender = Diagnosis = string.Empty;
         }
-
+        /// <summary>
+        /// Изменяет значение заданного поля пациента.
+        /// </summary>
         public void ChangeField(string fieldName, object value, List<Patient> allData)
         {
             if (value is null)
@@ -194,6 +204,9 @@ namespace DataUtils
             return JsonSerializer.Serialize(this);
         }
 
+        /// <summary>
+        /// Преобразует объект в массив строк.
+        /// </summary>
         public string[] ToArray() => new string[] { PatientId.ToString(), Name, Age.ToString(), Gender,
             Diagnosis, HeartRate.ToString(), $"{Temperature:f2}", OxygenSaturation.ToString() };
     }

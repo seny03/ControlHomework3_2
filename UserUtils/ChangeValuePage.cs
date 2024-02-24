@@ -3,7 +3,7 @@
 namespace UserUtils
 {
     /// <summary>
-    /// Предоставляет страницу меню для сортировки данных.
+    /// Предоставляет страницу меню для изменения значения поля пациента в данных.
     /// </summary>
     internal class ChangeValuePage : MenuPage
     {
@@ -26,16 +26,7 @@ namespace UserUtils
             }
             Actions = actions.ToArray();
         }
-        internal ChangeValuePage(int patientId)
-        {
-            Descriptions = Patient.ChangeableProperties;
-            List<Action> actions = new();
-            foreach (var property in Patient.ChangeableProperties)
-            {
-                actions.Add(() => ChangeValue(patientId, property));
-            }
-            Actions = actions.ToArray();
-        }
+        internal ChangeValuePage(int patientId = 0) : this(FullMenu.CurrentPage.Heading, FullMenu.CurrentPage.Patients, patientId) { }
 
         private void ChangeValue(int patientId, string property)
         {

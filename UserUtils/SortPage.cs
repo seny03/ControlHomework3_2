@@ -27,16 +27,7 @@ namespace UserUtils
             Actions = actions.ToArray();
         }
 
-        internal SortPage()
-        {
-            Descriptions = Patient.Properties;
-            List<Action> actions = new();
-            foreach (var property in Patient.Properties)
-            {
-                actions.Add(() => Sort(property));
-            }
-            Actions = actions.ToArray();
-        }
+        internal SortPage() : this(FullMenu.CurrentPage.Heading, FullMenu.CurrentPage.Patients) { }
 
         private void Sort(string property)
         {

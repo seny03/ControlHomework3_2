@@ -1,5 +1,8 @@
 ﻿namespace DataUtils
 {
+    /// <summary>
+    /// Предоставляет данные для события обновления какого-либо из полей пациента.
+    /// </summary>
     public class UpdatedEventArgs : EventArgs
     {
         public DateTime ChangeDateTime { get; }

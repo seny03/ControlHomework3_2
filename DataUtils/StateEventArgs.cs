@@ -1,5 +1,8 @@
 ﻿namespace DataUtils
 {
+    /// <summary>
+    /// Предоставляет данные для события, связанного с изменением важных параметров состовния пациента.
+    /// </summary>
     public class StateEventArgs : EventArgs
     {
         public bool PreviousState { get; }

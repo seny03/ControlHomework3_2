@@ -6,8 +6,6 @@ namespace UserUtils
     {
         static void Main(string[] args)
         {
-            IOUtils.HelloMessage();
-
             // В методах классов я выбрасываю исключения, поэтому тут будем их ловить.
             while (true)
             {
