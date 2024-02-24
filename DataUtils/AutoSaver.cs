@@ -20,7 +20,7 @@ namespace DataUtils
 
             if (logging)
             {
-                Console.WriteLine($"[!] Включено автосохранение в файл: \"{_path}\"");
+                Console.WriteLine($"[!] Автосохранение будет производиться в файл: \"{_path}\"");
             }
         }
 
