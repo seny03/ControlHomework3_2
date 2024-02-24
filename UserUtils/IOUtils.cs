@@ -4,6 +4,8 @@ namespace UserUtils
 {
     internal static class IOUtils
     {
+        private static int s_maxSymbolsInWidth = 155;
+
         /// <summary>
         /// Приветственное сообщение в начале работы программы.
         /// </summary>
@@ -11,6 +13,14 @@ namespace UserUtils
             Console.WriteLine($"Привет {Environment.UserName}! Данная программма дает возможность считать данные из json файла и выполнить над ними описанные в условии действия. " +
                 "Внимание! Структура json файла должна полностью совпадать с описанной в условии (иметь те же заголовки, разделители и т.д.)." +
                 Environment.NewLine);
+        /// <summary>
+        /// Предлагает нажать любую клавишу и ожидает ее нажатие.
+        /// </summary>
+        internal static void Plug()
+        {
+            Console.Write("Нажмите любую клавишу, чтобы продолжить: ");
+            Console.ReadKey();
+        }
 
         /// <summary>
         /// Ведет диалог с пользователем и считывает json данные.
@@ -44,7 +54,7 @@ namespace UserUtils
         /// <param name="heading">Заголовки.</param>
         /// <param name="data">Данные.</param>
         /// <returns></returns>
-        public static bool PrintTable(string[]? heading, Apartment[]? data)
+        public static bool PrintTable(string[]? heading, Patient[]? data)
         {
             if (data is null)
             {
@@ -153,6 +163,64 @@ namespace UserUtils
             Console.WriteLine(separatorString);
             Console.WriteLine();
             return true;
+        }
+
+        internal static List<Patient> Filter(List<Patient>? data, string property)
+        {
+            Console.Write($"Введите значение поля \"{property}\", по которому будет осуществлятся фильтрация: ");
+            string? value = Console.ReadLine();
+            List<Patient> filteredData = DataProcessing.Filter(data, property, value);
+            PrintTable(Patient.Properties, filteredData.ToArray());
+            Plug();
+            return filteredData;
+        }
+        internal static List<Patient> Sort(List<Patient>? data, string property)
+        {
+            List<Patient> sortedData = DataProcessing.Sort(data, property);
+            PrintTable(Patient.Properties, sortedData.ToArray());
+            Plug();
+            return sortedData;
+        }
+        internal static int? GetPropertyId(List<Patient>? patients)
+        {
+            if (patients is null || patients.Count == 0)
+            {
+                Console.WriteLine("Невозможно выполнить изменение какого-либо поля, потому что таблица с данными пустая.");
+                return null;
+            }
+            while (true)
+            {
+                Console.Write("Введите значение \"patient_id\" объекта, поле которого нужно изменить: ");
+                if (int.TryParse(Console.ReadLine(), out int patientId))
+                {
+                    if (patients.Any(x => x.PatientId == patientId))
+                    {
+                        return patientId;
+                    }
+                    Console.WriteLine($"В данных не содержится пациент с значением \"patient_id\" = {patientId}");
+                }
+                Console.WriteLine("Введенное значение некорректно.");
+            }
+        }
+        internal static List<Patient> ChangePropertyValue(List<Patient> data, int patinetId, string property)
+        {
+            while (true)
+            {
+                Console.Write($"Введите новое значение свойства \"{property}\" для пациента с \"patient_id\" = {patinetId}: ");
+                object? value = Console.ReadLine();
+                try
+                {
+                    foreach (var patient in DataProcessing.Filter(data, "patient_id", patinetId))
+                    {
+                        patient.ChangeField(property, value, data);
+                    }
+                    return data;
+                }
+                catch
+                {
+                    Console.WriteLine($"Некорректное значение для свойства \"{property}\".");
+                }
+            }
         }
     }
 }

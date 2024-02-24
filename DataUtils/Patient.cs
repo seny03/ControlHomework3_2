@@ -89,6 +89,8 @@ namespace DataUtils
 
         public bool IsNormalState => (36 <= Temperature && Temperature <= 38) && (60 <= HeartRate && HeartRate <= 100) &&
             (95 <= OxygenSaturation && OxygenSaturation <= 100);
+        public static string[] Properties => new string[] { "patient_id", "name", "age", "gender", "diagnosis", "heart_rate", "temperature", "oxygen_saturation" };
+        public static string[] ChangeableProperties => new string[] { "name", "age", "gender", "diagnosis", "heart_rate", "temperature", "oxygen_saturation" };
 
         private event EventHandler<StateEventArgs>? ImportantFieldUpdated;
         public event EventHandler<UpdatedEventArgs>? Updated;
@@ -156,25 +158,25 @@ namespace DataUtils
             switch (fieldName)
             {
                 case "name":
-                    Name = (string)value;
+                    Name = Convert.ToString(value) ?? "";
                     break;
                 case "age":
-                    Age = (int)value;
+                    Age = Convert.ToInt32(value);
                     break;
                 case "gender":
-                    Gender = (string)value;
+                    Gender = Convert.ToString(value) ?? "";
                     break;
                 case "diagnosis":
-                    Diagnosis = (string)value;
+                    Diagnosis = Convert.ToString(value) ?? "";
                     break;
                 case "heart_rate":
-                    HeartRate = (int)value;
+                    HeartRate = Convert.ToInt32(value);
                     break;
                 case "temperature":
-                    Temperature = (double)value;
+                    Temperature = Convert.ToDouble(value);
                     break;
                 case "oxygen_saturation":
-                    OxygenSaturation = (int)value;
+                    OxygenSaturation = Convert.ToInt32(value);
                     break;
                 default:
                     throw new ArgumentException($"Некорректное назвние поля: {fieldName}");
@@ -191,5 +193,8 @@ namespace DataUtils
         {
             return JsonSerializer.Serialize(this);
         }
+
+        public string[] ToArray() => new string[] { PatientId.ToString(), Name, Age.ToString(), Gender,
+            Diagnosis, HeartRate.ToString(), $"{Temperature:f2}", OxygenSaturation.ToString() };
     }
 }

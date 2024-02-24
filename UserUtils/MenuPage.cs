@@ -22,7 +22,7 @@ namespace UserUtils
             get; set;
         }
 
-        public List<Patient> Patients
+        public List<Patient>? Patients
         {
             get; set;
         }
@@ -33,6 +33,12 @@ namespace UserUtils
             get { return currentOption; }
             set { currentOption = (value + Descriptions.Length) % Descriptions.Length; }
         }
+        internal MenuPage(string[]? heading, List<Patient>? patients)
+        {
+            Heading = heading;
+            Patients = patients;
+        }
+        internal MenuPage() { }
 
         /// <summary>
         /// Выводит страницу один раз.

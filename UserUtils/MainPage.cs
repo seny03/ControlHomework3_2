@@ -15,40 +15,57 @@ namespace UserUtils
         {
             get;
         }
+
+        internal MainPage(string[]? heading, List<Patient>? patients) : base(heading, patients)
+        {
+            // Переопределяем доступные в меню возможности.
+            Descriptions = new string[]{
+                "Отфильтровать данные по одному из полей",
+                "Отсортировать данные по одному из полей",
+                "Отредактировать значение поля в одном из объектов",
+                "Выйти из программы"
+            };
+
+            Actions = new Action[]
+            {
+                FilterByProperty, SortByProperty, ChangePropertyValue, Exit
+            };
+        }
         internal MainPage()
         {
             // Переопределяем доступные в меню возможности.
             Descriptions = new string[]{
                 "Отфильтровать данные по одному из полей",
                 "Отсортировать данные по одному из полей",
+                "Отредактировать значение поля в одном из объектов",
                 "Выйти из программы"
             };
 
             Actions = new Action[]
             {
-                FilterByProperty, SortByProperty, Exit
+                FilterByProperty, SortByProperty, ChangePropertyValue, Exit
             };
         }
 
         // Следующие методы реализуют соответствующий условию и доступный для выбора в меню функционал.
         private void FilterByProperty()
         {
-            var (property, value) = IOUtils.GetPropertyAndValue();
-            Apartments = DataProcessing.Filter(Apartments, property, value);
-            if (IOUtils.PrintTable(Heading, Apartments))
-            {
-                IOUtils.SaveData(Apartments);
-            }
+            FullMenu.CurrentPage = new FilterPage(Heading, Patients);
         }
         private void SortByProperty()
         {
-            string property = IOUtils.GetProperty();
-            Apartments = DataProcessing.Sort(Apartments, property);
-            if (IOUtils.PrintTable(Heading, Apartments))
+            FullMenu.CurrentPage = new SortPage(Heading, Patients);
+        }
+        private void ChangePropertyValue()
+        {
+            int? patientId = IOUtils.GetPropertyId(Patients);
+            if (patientId is null)
             {
-                IOUtils.SaveData(Apartments);
-                Console.SetOut(new StreamWriter(Console.OpenStandardOutput()));
+                return;
             }
+            IOUtils.PrintTable(Heading, DataProcessing.Filter(Patients, "patient_id", patientId).ToArray());
+            IOUtils.Plug();
+            FullMenu.CurrentPage = new ChangeValuePage(Heading, Patients, (int)patientId);
         }
         private void Exit() => Environment.Exit(0);
     }

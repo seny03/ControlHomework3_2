@@ -2,8 +2,12 @@
 {
     public static class DataProcessing
     {
-        public static List<Patient> Sort(List<Patient> data, string columnName)
+        public static List<Patient> Sort(List<Patient>? data, string columnName)
         {
+            if (data is null)
+            {
+                return new List<Patient>();
+            }
             List<Patient> sortedData = columnName switch
             {
                 "patient_id" => data.OrderBy(x => x.PatientId).ToList(),
@@ -19,22 +23,34 @@
             return sortedData;
         }
 
-        public static List<Patient> Filter(List<Patient> data, string columnName, object value)
+        public static List<Patient> Filter(List<Patient>? data, string columnName, object? value)
         {
-            List<Patient> filteredData = columnName switch
+            if (data is null)
             {
-                "patient_id" => data.Where(x => x.PatientId == (int)value).ToList(),
-                "name" => data.Where(x => x.Name == (string)value).ToList(),
-                "age" => data.Where(x => x.Age == (int)value).ToList(),
-                "gender" => data.Where(x => x.Gender == (string)value).ToList(),
-                "diagnosis" => data.Where(x => x.Diagnosis == (string)value).ToList(),
-                "heart_rate" => data.Where(x => x.HeartRate == (int)value).ToList(),
-                "temperature" => data.Where(x => x.Temperature == (double)value).ToList(),
-                "oxygen_saturation" => data.Where(x => x.OxygenSaturation == (int)value).ToList(),
-                _ => throw new ArgumentException($"Некорректное название колонки: {columnName}")
-            };
+                return new List<Patient>();
+            }
+            try
+            {
+                List<Patient> filteredData = columnName switch
+                {
+                    "patient_id" => data.Where(x => x.PatientId == Convert.ToInt32(value)).ToList(),
+                    "name" => data.Where(x => x.Name == Convert.ToString(value)).ToList(),
+                    "age" => data.Where(x => x.Age == Convert.ToInt32(value)).ToList(),
+                    "gender" => data.Where(x => x.Gender == Convert.ToString(value)).ToList(),
+                    "diagnosis" => data.Where(x => x.Diagnosis == Convert.ToString(value)).ToList(),
+                    "heart_rate" => data.Where(x => x.HeartRate == Convert.ToInt32(value)).ToList(),
+                    "temperature" => data.Where(x => x.Temperature == Convert.ToDouble(value)).ToList(),
+                    "oxygen_saturation" => data.Where(x => x.OxygenSaturation == Convert.ToInt32(value)).ToList(),
+                    _ => throw new ArgumentException($"Некорректное название колонки: {columnName}")
+                };
 
-            return filteredData;
+                return filteredData;
+            }
+            // Обработка ошибки преобразования типов
+            catch (Exception ex) when (ex is FormatException || ex is InvalidCastException)
+            {
+                return new List<Patient>();
+            }
         }
     }
 }

@@ -7,12 +7,23 @@ namespace UserUtils
         static void Main(string[] args)
         {
             IOUtils.HelloMessage();
+
+            // В методах классов я выбрасываю исключения, поэтому тут будем их ловить.
             while (true)
             {
-                List<Patient>? patients = IOUtils.ReadData();
-                if (patients is null)
+                try
                 {
-                    continue;
+                    List<Patient>? patients = IOUtils.ReadData();
+                    if (patients is null)
+                    {
+                        continue;
+                    }
+                    FullMenu.CurrentPage = new MainPage(Patient.Properties, patients);
+                    FullMenu.LoadMenu();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"В процессе выполнения возникла ошибка: " + ex.Message);
                 }
             }
         }
